@@ -1,14 +1,15 @@
-Dim strSend
-strSend = "<?xml xxxxxxxxxxxxxxxxxxxxxx >"
-strSend = strSend & ServiceID & ServicePassword
+function SevurityToken()
+	Dim strSend
+	strSend = "<?xml xxxxxxxxxxxxxxxxxxxxxx >"
+	strSend = strSend & ServiceID & ServicePassword
 
-Dim XDoc
-set XDoc = CreateObject("MSXML2.DOMDocument")
-XDoc.async = false
-XDoc.validateOnParse = false
-XDoc.resolveExternals = false
+	Dim XDoc
+	set XDoc = CreateObject("MSXML2.DOMDocument")
+	XDoc.async = false
+	XDoc.validateOnParse = false
+	XDoc.resolveExternals = false
 
-If XDoc.load(XmlHttpPost(strSend)) Then	
+	If XDoc.load(XmlHttpPost(strSend)) Then	
 		Dim Root,NodeList,Elem
 		Set Root = XDoc.documentElement
 		Set NodeList = Root.getElementsByTagName("Token") 
@@ -19,3 +20,23 @@ If XDoc.load(XmlHttpPost(strSend)) Then
 		SecurityValidateEmployeeLogOnToken = 0
 	END IF
 	Set XDoc = nothing
+
+end function
+
+
+function XmlHttpPost(strRequest)
+	Dim WebServiceURL
+	WebServiceURL = "http://endpoint_url"
+	Dim objXMLHTTP	
+	
+	Set objXMLHTTP = Server.CreateObject("MSXML2.ServerXMLHTTP.6.0")
+	objXMLHTTP.setTimeouts 5000, 60000, 10000, 10000 
+	objXMLHTTP.Open "POST", WebServiceURL, False
+	objXMLHTTP.setRequestHeader "Content-Type", "text/xml; charset=utf-8"
+        objXMLHTTP.setRequestHeader "Post", strRequest    
+	
+	objXMLHTTP.Send strRequest
+	XmlHttpPost = objXMLHTTP.responseStream
+	
+	Set objXMLHTTP = Nothing	
+end function
