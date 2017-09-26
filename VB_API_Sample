@@ -1,0 +1,21 @@
+Dim strSend
+strSend = "<?xml xxxxxxxxxxxxxxxxxxxxxx >"
+strSend = strSend & ServiceID & ServicePassword
+
+Dim XDoc
+set XDoc = CreateObject("MSXML2.DOMDocument")
+XDoc.async = false
+XDoc.validateOnParse = false
+XDoc.resolveExternals = false
+
+If XDoc.load(XmlHttpPost(strSend)) Then	
+		Dim Root,NodeList,Elem
+		Set Root = XDoc.documentElement
+		Set NodeList = Root.getElementsByTagName("Token") 
+		Set Elem = NodeList(0)
+		SecurityValidateEmployeeLogOnToken = Elem.firstChild.nodeValue
+	Else
+		Response.Write("Error. Cannot read Server response.")
+		SecurityValidateEmployeeLogOnToken = 0
+	END IF
+	Set XDoc = nothing
